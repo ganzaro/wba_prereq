@@ -1,26 +1,122 @@
-use cosmwasm_schema::{cw_serde, QueryResponses};
+use schemars::JsonSchema;
+use serde::{Deserialize, Serialize};
+// 13 Query
+// + use crate::state:{Poll, Ballot};
+use crate::state::{Ballot, Poll};
 
-#[cw_serde]
+// 06 Instantiate
+// - #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+// - #[serde(rename_all = "snake_case")]
+// - pub struct InstantiateMsg {
+// -     pub val: String,
+// - }
+// + #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+// + #[serde(rename_all = "snake_case")]
+// + pub struct InstantiateMsg {
+// +     pub admin: Option<String>,
+// + }
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[serde(rename_all = "snake_case")]
 pub struct InstantiateMsg {
-    pub count: i32,
+    pub admin: Option<String>,
 }
 
-#[cw_serde]
+// 08 ExecuteMsg
+// - #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+// - #[serde(rename_all = "snake_case")]
+// - pub enum ExecuteMsg {
+// -     CustomMsg { val: String },
+// - }
+// + #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+// + #[serde(rename_all = "snake_case")]
+// + pub enum ExecuteMsg {
+// +     CreatePoll {
+// +         poll_id: String,
+// +         question: String,
+// +         options: Vec<String>,
+// +     },
+// +     Vote {
+// +         poll_id: String,
+// +         vote: String,
+// +     },
+// + }
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[serde(rename_all = "snake_case")]
 pub enum ExecuteMsg {
-    Increment {},
-    Reset { count: i32 },
+    CreatePoll {
+        poll_id: String,
+        question: String,
+        options: Vec<String>,
+    },
+    Vote {
+        poll_id: String,
+        vote: String,
+    },
 }
 
-#[cw_serde]
-#[derive(QueryResponses)]
+// 12 Query
+// - #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+// - #[serde(rename_all = "snake_case")]
+// - pub enum QueryMsg {
+// -     CustomMsg { val: String },
+// - }
+// + #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+// + #[serde(rename_all = "snake_case")]
+// + pub enum QueryMsg {
+// +     AllPolls {},
+// +     Poll {
+// +         poll_id: String,
+// +     },
+// +     Vote {
+// +         poll_id: String,
+// +         address: String,
+// +     },
+// + }
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[serde(rename_all = "snake_case")]
 pub enum QueryMsg {
-    // GetCount returns the current count as a json-encoded number
-    #[returns(GetCountResponse)]
-    GetCount {},
+    AllPolls {},
+    Poll { poll_id: String },
+    Vote { poll_id: String, address: String },
 }
 
-// We define a custom struct for each query response
-#[cw_serde]
-pub struct GetCountResponse {
-    pub count: i32,
+// 12 QueryMsg
+// - #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+// - #[serde(rename_all = "snake_case")]
+// - pub struct CustomResponse {
+// -     val: String,
+// - }
+
+// 13 Query
+// + #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+// + pub struct AllPollsResponse {
+// +     pub polls: Vec<Poll>,
+// + }
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct AllPollsResponse {
+    pub polls: Vec<Poll>,
 }
+
+// 13 Query
+// + #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+// + pub struct PollResponse {
+// +     pub poll: Option<Poll>,
+// + }
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct PollResponse {
+    pub poll: Option<Poll>,
+}
+
+// 13 Query
+// + #[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+// + pub struct VoteResponse {
+// +     pub vote: Option<Ballot>,
+// + }
+#[derive(Serialize, Deserialize, Clone, PartialEq, JsonSchema, Debug)]
+pub struct VoteResponse {
+    pub vote: Option<Ballot>,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum MigrateMsg {}
